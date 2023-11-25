@@ -8,22 +8,33 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
-
+use App\Models\User;
+use Illuminate\Support\Facades\Gate;
 class ProfileController extends Controller
 {
-    /**
-     * Display the user's profile form.
-     */
-    public function edit(Request $request): View
+ 
+    public function indexProfile()
     {
-        return view('profile.edit', [
-            'user' => $request->user(),
-        ]);
+        $users = User::where('id', '!=', 1)->get();
+        return view('profile.profile', compact('users'));
     }
 
-    /**
-     * Update the user's profile information.
-     */
+    public function edit($userId){
+        $users = User::where('id', $userId)->get();
+        return view('profile.edit', compact('users'));  
+    }
+
+    public function editSave (Request $request, $userId)
+    {   
+        $users = User::where('id',$userId)
+        ->update([
+            'name'  =>$request->name,
+            'email' =>$request->email
+        ]);
+      
+        return redirect()->route('indexProfile')->with('success', 'Editado com sucesso');
+    }
+
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
         $request->user()->fill($request->validated());
@@ -56,5 +67,14 @@ class ProfileController extends Controller
         $request->session()->regenerateToken();
 
         return Redirect::to('/');
+    }
+
+    public function status($statusId)
+    {
+        $status = User::findOrFail($statusId);
+        Gate::authorize('permission');
+        $status->status = ($status->status == 1) ? 0 : 1;
+        $status->save();
+        return response()->json(['status' => $status->status]);
     }
 }

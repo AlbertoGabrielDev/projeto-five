@@ -40,7 +40,7 @@ class RegisteredUserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-        ])->givePermissionTo("comum"); //criar duas permissão, permissao comum e permissão suprema.
+        ]); //criar duas permissão, permissao comum e permissão suprema.->givePermissionTo("comum");
 
         event(new Registered($user));
 
