@@ -45,24 +45,21 @@ class UploadController extends Controller
     }
 
     public function approve($approve)
-    {
-        $upload = Upload::findOrFail($approve);
-      
-        $upload->status = 'approved';
-        $upload->save();
-
-        return redirect()->route('showIndex')->with('success', 'Upload aprovado com sucesso.');
-    }
+{
+    $upload = Upload::findOrFail($approve);
+    $upload->status = 'approved';
+    $upload->save();
+    $approve = Upload::where('status', 'pending')->first();
+    return $approve ? redirect()->route('showPending') : redirect()->route('showIndex');
+}
 
     public function reject($reject)
     {
         $upload = Upload::findOrFail($reject);
-
-        // Verificar permissões ou propriedade do usuário antes de rejeitar
         $upload->status = 'rejected';
         $upload->save();
-
-        return redirect()->route('showIndex')->with('success', 'Upload rejeitado com sucesso.');
+        $reject = Upload::where('status', 'rejected')->first();
+        return $reject ? redirect()->route('showPending') : redirect()->route('showIndex');
     }
 
 }

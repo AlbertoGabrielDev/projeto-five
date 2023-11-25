@@ -10,8 +10,10 @@
     @foreach($uploads as $upload)
         <li class="text-white">
             {{ $upload->user->name }} enviou um arquivo. 
-            <a class="text-white" href="{{ route('approve',['approve'=> $upload->id]) }}">Aprovar</a>
-            <a class="text-white" href="{{ route('reject',['reject'=> $upload->id]) }}">Rejeitar</a>
+        </li>
+        <li>
+        <a class="text-white" href="{{ route('approve',['approve'=> $upload->id]) }}">Aprovar</a>...
+        <a class="text-white" href="{{ route('reject',['reject'=> $upload->id]) }}">Rejeitar</a>
         </li>
     @endforeach
 </ul>
