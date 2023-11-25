@@ -32,7 +32,7 @@ class ProfileController extends Controller
             'email' =>$request->email
         ]);
       
-        return redirect()->route('indexProfile')->with('success', 'Editado com sucesso');
+        return redirect()->route('indexProfile');
     }
 
     public function update(ProfileUpdateRequest $request): RedirectResponse
